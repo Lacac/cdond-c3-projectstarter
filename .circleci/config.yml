@@ -41,7 +41,7 @@ jobs:
 
   test-frontend:
     docker:
-      - image: circleci/node:5.0.2 
+      - image: circleci/node:13.8.0
     # executor: node/default
     steps:
       - checkout
@@ -64,6 +64,7 @@ workflows:
       - build-frontend
       - build-backend
       - test-frontend:
-          requires: build-frontend
+          requires: 
+            build-frontend
 
 
