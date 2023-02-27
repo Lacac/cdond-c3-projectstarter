@@ -4,6 +4,21 @@ version: 2.1
 #   node: circleci/node@5.0.2
 #   heroku: circleci/heroku@1.2.6
 
+commands:
+  destroy-environment:
+    description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
+    parameters:
+      # Add parameter here   
+    steps:
+      - run:
+          name: Destroy environments
+          when: on_fail
+          command: |
+            aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
+            aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
+
+
+
 jobs:
   build-frontend:
     docker:
@@ -147,7 +162,9 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
-      # Here's where you will add some code to rollback on failure      
+      # Here's where you will add some code to rollback on failure     
+      - destroy-environment
+        when: on fail 
 
 
 workflows:
@@ -160,7 +177,7 @@ workflows:
             - build-frontend
       - test-backend:
           requires: 
-            - build-frontend
+            - build-backend
       - scan-frontend:
           requires: 
             - build-frontend
