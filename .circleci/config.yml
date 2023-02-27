@@ -12,7 +12,7 @@ commands:
     steps:
       - run:
           name: Destroy environments
-          when: on_fail
+          # when: on_fail
           command: |
             aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
             aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
@@ -158,13 +158,14 @@ jobs:
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --output text >> inventory
+      - destroy-environment
+        when: on_fail 
       - persist_to_workspace:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
       # Here's where you will add some code to rollback on failure     
-      - destroy-environment
-        when: on_fail 
+
 
 
 workflows:
