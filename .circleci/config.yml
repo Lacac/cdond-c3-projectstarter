@@ -37,7 +37,7 @@ jobs:
 
   test-frontend:
     docker:
-      - image: doctrine/nodejs-aws-cli
+      - image: circleci/node@5.0.2 
     steps:
       - checkout
       - restore_cache:
