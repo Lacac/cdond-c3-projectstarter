@@ -136,12 +136,12 @@ jobs:
       - image: doctrine/nodejs-aws-cli:latest
     steps:
       - checkout
-      - run: 
-          name: See the current folder
-          command: |
-            pwd
-            cd ..
-            ls
+      # - run: 
+      #     name: See the current folder
+      #     command: |
+      #       pwd
+      #       cd ..
+      #       ls
       - run:
           name: Ensure back-end infrastructure exists
           command: |
@@ -158,12 +158,12 @@ jobs:
               --tags project=udapeople \
               --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  
-      # - run:
-      #     name: Add back-end ip to ansible inventory
-      #     command: |
-      #       aws ec2 describe-instances \
-      #       --query 'Reservations[*].Instances[*].PublicIpAddress' \
-      #       --output text >> inventory.txt
+      - run:
+          name: Add back-end ip to ansible inventory
+          command: |
+            aws ec2 describe-instances \
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --output text >> ./.circleci/ansible/inventory.txt
       # - destroy-environment
       #   when: on_fail 
       # - persist_to_workspace:
@@ -192,7 +192,8 @@ jobs:
             sudo apt install software-properties-common -y
             sudo apt update -y
             sudo add-apt-repository ppa:deadsnakes/ppa -y
-            sudo apt-get install python3.6 -y
+            wget https://www.python.org/ftp/python/3.6.0/Python-3.6.0.tar.xz
+            tar xvf Python-3.6.0.tar.xz
             sudo apt-get install python3-pip -y
             python3 -m pip install --user ansible -y
   #     - run:
