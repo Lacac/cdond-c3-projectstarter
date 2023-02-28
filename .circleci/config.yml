@@ -140,6 +140,7 @@ jobs:
           name: See the current folder
           command: |
             pwd
+            cd
             ls
       - run:
           name: Ensure back-end infrastructure exists
