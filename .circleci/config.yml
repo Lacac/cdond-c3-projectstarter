@@ -7,15 +7,16 @@ version: 2.1
 commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
-    # parameters:
-    #   # Add parameter here   
+    parameters:
+      id:
+        type: string
     steps:
       - run:
           name: Destroy environments
-          # when: on_fail
+          when: on_fail
           command: |
-            aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
-            aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
+            aws cloudformation delete-stack --stack-name udapeople-backend-<<parameters.id>>
+            aws cloudformation delete-stack --stack-name udapeople-frontend-<<parameters.id>>
 
 
 
@@ -163,9 +164,9 @@ jobs:
           command: |
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
-            --output text >> ./.circleci/ansible/inventory.txt
-      # - destroy-environment
-      #   when: on_fail 
+            --output text > ./.circleci/ansible/inventory.txt
+      - destroy-environment:
+          id: '${CIRCLE_WORKFLOW_ID:0:7}'
       - persist_to_workspace:
           root: ~/
           paths:
@@ -185,19 +186,12 @@ jobs:
       - attach_workspace:
           at: ~/
       - run:
-          name: debug
+          name: Configure server
           command: |
-            pwd
-            ls -la
-            cd ~/project/.circleci/ansible
-            ls -la
-            cat inventory.txt
-
-  #     - run:
-  #         name: Configure server
-  #         command: |
-  #           ansible-playbook -i ./.circleci/ansible/inventory.txt ansible/configure-server.yml
-  #     # Here's where you will add some code to rollback on failure 
+            ansible-playbook -i inventory.txt configure-server.yml
+      # Here's where you will add some code to rollback on failure 
+      - destroy-environment:
+          id: '${CIRCLE_WORKFLOW_ID:0:7}'
 
 workflows:
   default:
