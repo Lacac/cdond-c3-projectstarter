@@ -195,6 +195,29 @@ jobs:
       - destroy-environment:
           id: '${CIRCLE_WORKFLOW_ID:0:7}'
 
+  run-migrations:
+    docker:
+      - image: doctrine/nodejs-aws-cli:latest
+    steps:
+      - checkout
+      - run:
+          name: Run migrations
+          command: | 
+            cd backend
+            npm install
+            npm run migrations > migrations_dump.txt
+      - run:
+          name: Send migration status to kvdb.io
+          command: |
+            if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt 
+            then
+              curl https://kvdb.io/Df3HQppKnzXR2UABK98gC2/inventory_file -d "1"
+            fi
+      - destroy-environment:
+          id: '${CIRCLE_WORKFLOW_ID:0:7}'
+
+
+
 workflows:
   default:
     jobs:
@@ -221,7 +244,9 @@ workflows:
       - configure-infrastructure:
           requires:
             - deploy-infrastructure
-      
+      - run-migrations:
+          requires: 
+            - configure-infrastructure
 
 
 
