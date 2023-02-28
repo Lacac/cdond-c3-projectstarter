@@ -170,15 +170,10 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
-      # Here's where you will add some code to rollback on failure     
-      # - run: 
-      #     name: Send migration status to kvdb.io
-      #     command: |
-      #       curl https://kvdb.io/Df3HQppKnzXR2UABK98gC2/inventory_file -d "1"
 
   configure-infrastructure:
     docker:
-      - image: ansible/ansible:ubuntu1404
+      - image: python:3.7-alpine3.11
     steps:
       - checkout
       - add_ssh_keys:
@@ -186,15 +181,8 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            sudo apt-get update -y
-            sudo apt install software-properties-common -y
-            sudo apt update -y
-            sudo add-apt-repository ppa:deadsnakes/ppa -y
-            sudo apt install wget -y
-            wget https://www.python.org/ftp/python/3.6.0/Python-3.6.0.tar.xz
-            tar xvf Python-3.6.0.tar.xz
-            sudo apt-get install python3-pip -y
-            python3 -m pip install --user ansible-core==2.12.3
+            apk add --update ansible 
+            pip install --user ansible
       - attach_workspace:
           at: ~/project/.circleci/ansible/inventory.txt
   #     - run:
