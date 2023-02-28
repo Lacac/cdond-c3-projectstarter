@@ -136,6 +136,11 @@ jobs:
       - image: doctrine/nodejs-aws-cli:latest
     steps:
       - checkout
+      - run: 
+        name: See the current folder
+        command: |
+          pwd
+          ls
       - run:
           name: Ensure back-end infrastructure exists
           command: |
@@ -152,12 +157,12 @@ jobs:
               --tags project=udapeople \
               --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  
-      - run:
-          name: Add back-end ip to ansible inventory
-          command: |
-            aws ec2 describe-instances \
-            --query 'Reservations[*].Instances[*].PublicIpAddress' \
-            --output text >> inventory
+      # - run:
+      #     name: Add back-end ip to ansible inventory
+      #     command: |
+      #       aws ec2 describe-instances \
+      #       --query 'Reservations[*].Instances[*].PublicIpAddress' \
+      #       --output text >> inventory.txt
       # - destroy-environment
       #   when: on_fail 
       # - persist_to_workspace:
@@ -165,10 +170,10 @@ jobs:
       #     paths:
       #       - project/.circleci/ansible/inventory.txt
       # Here's where you will add some code to rollback on failure     
-      - run: 
-          name: Send migration status to kvdb.io
-          command: |
-            curl https://kvdb.io/Df3HQppKnzXR2UABK98gC2/inventory_file -d "1"
+      # - run: 
+      #     name: Send migration status to kvdb.io
+      #     command: |
+      #       curl https://kvdb.io/Df3HQppKnzXR2UABK98gC2/inventory_file -d "1"
 
   configure-infrastructure:
     docker:
@@ -185,9 +190,9 @@ jobs:
             sudo apt-get update
             sudo apt install software-properties-common
             sudo apt update
-            sudo add-apt-repository ppa:deadsnakes/ppa
-            sudo apt-get install python3.6
-            sudo apt-get install python3-pip
+            sudo add-apt-repository ppa:deadsnakes/ppa -y
+            sudo apt-get install python3.6 -y
+            sudo apt-get install python3-pip -y
             python3 -m pip install --user ansible    
   #     - run:
   #         name: Configure server
