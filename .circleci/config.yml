@@ -183,7 +183,9 @@ jobs:
           name: Install dependencies
           command: |
             sudo apt-get update
+            sudo add-apt-repository ppa:deadsnakes/ppa
             sudo apt-get install python3.6
+            sudo apt-get install python3.7
             sudo apt-get install python3-pip
             python3 -m pip install --user ansible    
   #     - run:
