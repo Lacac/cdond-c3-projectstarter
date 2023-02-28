@@ -182,8 +182,10 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            sudo pip install pip --upgrade
-            sudo pip install --user ansible    
+            sudo apt-get update
+            sudo apt-get install python3.6
+            sudo apt-get install python3-pip
+            python3 -m pip install --user ansible    
   #     - run:
   #         name: Configure server
   #         command: |
