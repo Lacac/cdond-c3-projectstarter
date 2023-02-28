@@ -166,10 +166,10 @@ jobs:
             --output text >> ./.circleci/ansible/inventory.txt
       # - destroy-environment
       #   when: on_fail 
-      # - persist_to_workspace:
-      #     root: ~/
-      #     paths:
-      #       - project/.circleci/ansible/inventory.txt
+      - persist_to_workspace:
+          root: /tmp/workspace
+          paths:
+            - project/.circleci/ansible/inventory.txt
       # Here's where you will add some code to rollback on failure     
       # - run: 
       #     name: Send migration status to kvdb.io
@@ -183,8 +183,6 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints: ["fe:e2:93:4e:34:98:20:d6:db:56:52:2e:5b:e0:f7:e8"]
-  #     - attach_workspace:
-  #         at: ~/project/.circleci/ansible/inventory.txt
       - run:
           name: Install dependencies
           command: |
@@ -192,10 +190,13 @@ jobs:
             sudo apt install software-properties-common -y
             sudo apt update -y
             sudo add-apt-repository ppa:deadsnakes/ppa -y
+            sudo apt install wget -y
             wget https://www.python.org/ftp/python/3.6.0/Python-3.6.0.tar.xz
             tar xvf Python-3.6.0.tar.xz
             sudo apt-get install python3-pip -y
             python3 -m pip install --user ansible -y
+      - attach_workspace:
+          at: /tmp/workspace/project/.circleci/ansible/inventory.txt
   #     - run:
   #         name: Configure server
   #         command: |
