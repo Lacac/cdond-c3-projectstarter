@@ -183,7 +183,16 @@ jobs:
           command: |
             apk add --update ansible
       - attach_workspace:
-          at: ~/project/.circleci/ansible/inventory.txt
+          at: ~/
+      - run:
+          name: debug
+          command: |
+            pwd
+            ls -la
+            cd ~/project/.circleci/ansible
+            ls -la
+            cat inventory.txt
+
   #     - run:
   #         name: Configure server
   #         command: |
