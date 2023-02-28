@@ -194,7 +194,7 @@ jobs:
             wget https://www.python.org/ftp/python/3.6.0/Python-3.6.0.tar.xz
             tar xvf Python-3.6.0.tar.xz
             sudo apt-get install python3-pip -y
-            python3 -m pip install --user ansible
+            python3 -m pip install --user ansible-core==2.12.3
       - attach_workspace:
           at: ~/project/.circleci/ansible/inventory.txt
   #     - run:
