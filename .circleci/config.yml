@@ -137,10 +137,10 @@ jobs:
     steps:
       - checkout
       - run: 
-        name: See the current folder
-        command: |
-          pwd
-          ls
+          name: See the current folder
+          command: |
+            pwd
+            ls
       - run:
           name: Ensure back-end infrastructure exists
           command: |
