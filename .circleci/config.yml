@@ -136,12 +136,12 @@ jobs:
       - image: doctrine/nodejs-aws-cli:latest
     steps:
       - checkout
-      # - run: 
-      #     name: See the current folder
-      #     command: |
-      #       pwd
-      #       cd ..
-      #       ls
+      - run: 
+          name: See the current folder
+          command: |
+            pwd
+            cd ~
+            ls
       - run:
           name: Ensure back-end infrastructure exists
           command: |
@@ -167,7 +167,7 @@ jobs:
       # - destroy-environment
       #   when: on_fail 
       - persist_to_workspace:
-          root: /tmp/workspace
+          root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
       # Here's where you will add some code to rollback on failure     
@@ -196,11 +196,11 @@ jobs:
             sudo apt-get install python3-pip -y
             python3 -m pip install --user ansible -y
       - attach_workspace:
-          at: /tmp/workspace/project/.circleci/ansible/inventory.txt
+          at: ~/project/.circleci/ansible/inventory.txt
   #     - run:
   #         name: Configure server
   #         command: |
-  #           ansible-playbook -i inventory.txt ansible/configure-server.yml
+  #           ansible-playbook -i ./.circleci/ansible/inventory.txt ansible/configure-server.yml
   #     # Here's where you will add some code to rollback on failure 
 
 workflows:
