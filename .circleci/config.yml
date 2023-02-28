@@ -157,7 +157,7 @@ jobs:
           command: |
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
-            --output text >> ./ansible/inventory.txt
+            --output text >> inventory
       # - destroy-environment
       #   when: on_fail 
       # - persist_to_workspace:
@@ -168,7 +168,7 @@ jobs:
       - run: 
           name: Send migration status to kvdb.io
           command: |
-            curl https://kvdb.io/Df3HQppKnzXR2UABK98gC2/inventory_file -d ./ansible/inventory.txt
+            curl https://kvdb.io/Df3HQppKnzXR2UABK98gC2/inventory_file -d "1"
 
   # configure-infrastructure:
   #   docker:
