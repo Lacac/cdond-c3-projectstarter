@@ -140,7 +140,7 @@ jobs:
           name: See the current folder
           command: |
             pwd
-            cd
+            cd ..
             ls
       - run:
           name: Ensure back-end infrastructure exists
@@ -188,13 +188,13 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            sudo apt-get update
-            sudo apt install software-properties-common
-            sudo apt update
+            sudo apt-get update -y
+            sudo apt install software-properties-common -y
+            sudo apt update -y
             sudo add-apt-repository ppa:deadsnakes/ppa -y
             sudo apt-get install python3.6 -y
             sudo apt-get install python3-pip -y
-            python3 -m pip install --user ansible    
+            python3 -m pip install --user ansible -y
   #     - run:
   #         name: Configure server
   #         command: |
