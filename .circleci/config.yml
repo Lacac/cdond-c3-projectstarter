@@ -170,20 +170,20 @@ jobs:
           command: |
             curl https://kvdb.io/Df3HQppKnzXR2UABK98gC2/inventory_file -d "1"
 
-  # configure-infrastructure:
-  #   docker:
-  #     - image: ansible/ansible:ubuntu1404
-  #   steps:
-  #     - checkout
-  #     - add_ssh_keys:
-  #         fingerprints: ["fe:e2:93:4e:34:98:20:d6:db:56:52:2e:5b:e0:f7:e8"]
+  configure-infrastructure:
+    docker:
+      - image: ansible/ansible:ubuntu1404
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["fe:e2:93:4e:34:98:20:d6:db:56:52:2e:5b:e0:f7:e8"]
   #     - attach_workspace:
   #         at: ~/project/.circleci/ansible/inventory.txt
-  #     - run:
-  #         name: Install dependencies
-  #         command: |
-  #           sudo pip install pip --upgrade
-  #           sudo pip install --user ansible    
+      - run:
+          name: Install dependencies
+          command: |
+            sudo pip install pip --upgrade
+            sudo pip install --user ansible    
   #     - run:
   #         name: Configure server
   #         command: |
@@ -213,9 +213,9 @@ workflows:
             - test-backend
             - scan-frontend
             - scan-backend
-      # - configure-infrastructure:
-      #     requires:
-      #       - deploy-infrastructure
+      - configure-infrastructure:
+          requires:
+            - deploy-infrastructure
       
 
 
