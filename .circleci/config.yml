@@ -183,6 +183,7 @@ jobs:
           name: Install dependencies
           command: |
             apk add --update tar gzip ansible
+            pip3 -U paramiko
             pip install awscli
       - attach_workspace:
           at: ~/
