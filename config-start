@@ -206,17 +206,18 @@ jobs:
                     
   deploy-backend:
     docker:
-      # Docker image here that supports Ansible
+      - image: python:3.7-alpine3.11
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: ["fa:f8:21:27:fd:a4:05:3f:01:7e:72:57:54:81:02:18"]
+          fingerprints: ["a5:39:80:52:1a:ea:51:2e:80:b9:d8:40:c3:e9:65:c0"]
       - attach_workspace:
           at: ~/
       - run:
           name: Install dependencies
           command: |
-            # your code here
+            apk add --update tar gzip ansible
+            apk add --no-cache npm
       - run:
           name: Deploy backend
           command: |
@@ -225,12 +226,11 @@ jobs:
             npm run build
             cd ..
             tar -C backend -czvf artifact.tar.gz .
-            cd .circleci/ansible
+            cd ~/project/.circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
-
-      # Here's where you will add some code to rollback on failure  
+      - destroy-environment 
 
   smoke-test:
     docker:
