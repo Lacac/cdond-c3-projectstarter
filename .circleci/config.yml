@@ -178,7 +178,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: ["fa:f8:21:27:fd:a4:05:3f:01:7e:72:57:54:81:02:18"]
+          fingerprints: ["28:29:ec:14:1d:d8:81:ea:2b:1f:37:30:84:99:d3:e0"]
       - run:
           name: Install dependencies
           command: |
@@ -187,11 +187,11 @@ jobs:
             apk add openssh-client
       - attach_workspace:
           at: ~/
-      # - run: 
-      #     name: DEBUG
-      #     command: |
-      #       cd ~/project/.circleci/ansible
-      #       cat inventory.txt
+      - run: 
+          name: DEBUG
+          command: |
+            cd ~/project/.circleci/ansible
+            cat inventory.txt
       - run:
           name: Configure server
           command: |
@@ -201,60 +201,58 @@ jobs:
       # - destroy-environment:
       #     id: '${CIRCLE_WORKFLOW_ID:0:7}'
 
+  
+  # run-migrations:
+  #   docker:
+  #     - image: doctrine/nodejs-aws-cli:latest
+  #   steps:
+  #     - checkout
+  #     - run:
+  #         name: Run migrations
+  #         command: | 
+  #           cd backend
+  #           npm install
+  #           npm run migrations > migrations_dump.txt
+  #     - run:
+  #         name: Send migration status to kvdb.io
+  #         command: |
+  #           if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt 
+  #           then
+  #             curl https://kvdb.io/Df3HQppKnzXR2UABK98gC2/inventory_file -d "1"
+  #           fi
+  #     - destroy-environment:
+  #         id: '${CIRCLE_WORKFLOW_ID:0:7}'
 
-  deploy-frontend:
-    docker:
-      - image: doctrine/nodejs-aws-cli:latest
-    steps:
-      - checkout
-      - attach_workspace:
-          at: ~/
-      - run:
-          name: Install dependencies
-          command: |
-            docker run --rm -it --entrypoint apk doctrine/nodejs-aws-cli:latest add --no-cache npm
+  # deploy-frontend:
+  #   docker:
+  #     - image: doctrine/nodejs-aws-cli:latest
+  #   steps:
+  #     - checkout
+  #     - attach_workspace:
+  #         at: ~/
+  #     - run:
+  #         name: Install dependencies
+  #         command: |
+  #           docker run --rm -it --entrypoint apk doctrine/nodejs-aws-cli:latest add --no-cache npm
 
-      - run:
-          name: Get backend url
-          command: |
-            export BACKEND_IP=$(grep -Po '^[0-9.]+' ~/project/.circleci/ansible/inventory.txt)
-            export API_URL="http://${BACKEND_IP}:3030"
-            echo "${API_URL}"
-            echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
-            cat frontend/.env
-      - run:
-          name: Deploy frontend objects
-          command: |
-            cd frontend
-            npm install
-            npm run build
-            tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
-            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+  #     - run:
+  #         name: Get backend url
+  #         command: |
+  #           export BACKEND_IP=$(grep -Po '^[0-9.]+' ~/project/.circleci/ansible/inventory.txt)
+  #           export API_URL="http://${BACKEND_IP}:3030"
+  #           echo "${API_URL}"
+  #           echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
+  #           cat frontend/.env
+  #     - run:
+  #         name: Deploy frontend objects
+  #         command: |
+  #           cd frontend
+  #           npm install
+  #           npm run build
+  #           tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
+  #           aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
 
-      # Here's where you will add some code to rollback on failure    
-
-  run-migrations:
-    docker:
-      - image: doctrine/nodejs-aws-cli:latest
-    steps:
-      - checkout
-      - run:
-          name: Run migrations
-          command: | 
-            cd backend
-            npm install
-            npm run migrations > migrations_dump.txt
-      - run:
-          name: Send migration status to kvdb.io
-          command: |
-            if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt 
-            then
-              curl https://kvdb.io/Df3HQppKnzXR2UABK98gC2/inventory_file -d "1"
-            fi
-      - destroy-environment:
-          id: '${CIRCLE_WORKFLOW_ID:0:7}'
-
-
+      # Here's where you will add some code to rollback on failure  
 
 workflows:
   default:
@@ -282,9 +280,9 @@ workflows:
       - configure-infrastructure:
           requires:
             - deploy-infrastructure
-      - run-migrations:
-          requires: 
-            - configure-infrastructure
+      # - run-migrations:
+      #     requires: 
+      #       - configure-infrastructure
 
 
 
