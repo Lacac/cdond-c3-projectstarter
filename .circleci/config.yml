@@ -184,6 +184,7 @@ jobs:
           command: |
             apk add --update tar gzip ansible
             pip install awscli
+            apk add openssh-client
       - attach_workspace:
           at: ~/
       # - run: 
@@ -199,6 +200,38 @@ jobs:
       # Here's where you will add some code to rollback on failure 
       # - destroy-environment:
       #     id: '${CIRCLE_WORKFLOW_ID:0:7}'
+
+
+  deploy-frontend:
+    docker:
+      - image: doctrine/nodejs-aws-cli:latest
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Install dependencies
+          command: |
+            docker run --rm -it --entrypoint apk doctrine/nodejs-aws-cli:latest add --no-cache npm
+
+      - run:
+          name: Get backend url
+          command: |
+            export BACKEND_IP=$(grep -Po '^[0-9.]+' ~/project/.circleci/ansible/inventory.txt)
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "${API_URL}"
+            echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
+            cat frontend/.env
+      - run:
+          name: Deploy frontend objects
+          command: |
+            cd frontend
+            npm install
+            npm run build
+            tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
+            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+
+      # Here's where you will add some code to rollback on failure    
 
   run-migrations:
     docker:
