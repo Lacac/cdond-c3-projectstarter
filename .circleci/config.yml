@@ -178,14 +178,19 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: ["fe:e2:93:4e:34:98:20:d6:db:56:52:2e:5b:e0:f7:e8"]
+          fingerprints: ["fa:f8:21:27:fd:a4:05:3f:01:7e:72:57:54:81:02:18"]
       - run:
           name: Install dependencies
           command: |
-            apk add --update ansible
+            apk add --update tar gzip ansible
             pip install awscli
       - attach_workspace:
           at: ~/
+      - run: 
+          name: DEBUG
+          command: |
+            cd ~/project/.circleci/ansible
+            cat inventory.txt
       - run:
           name: Configure server
           command: |
