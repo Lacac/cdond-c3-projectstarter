@@ -186,17 +186,14 @@ jobs:
             pip install awscli
       - attach_workspace:
           at: ~/
-      - run: 
-          name: DEBUG
-          command: |
-            cd ~/project/.circleci/ansible
-            cat inventory.txt
+      # - run: 
+      #     name: DEBUG
+      #     command: |
+      #       cd ~/project/.circleci/ansible
+      #       cat inventory.txt
       - run:
           name: Configure server
           command: |
-            export ANSIBLE_HOST_KEY_CHECKING=False
-            export RECORD_HOST_KEYS=False
-            export ANSIBLE_PARAMIKO_BANNER_TIMEOUT=None
             cd ~/project/.circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
       # Here's where you will add some code to rollback on failure 
