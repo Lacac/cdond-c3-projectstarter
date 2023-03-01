@@ -188,9 +188,9 @@ jobs:
       - run:
           name: Get backend url
           command: |
-            export BACKEND_IP=$
+            export BACKEND_IP=$(grep -Po '^[0-9.]+' ~/project/.circleci/ansible/inventory.txt)
             export API_URL="http://${BACKEND_IP}:3030"
-            echo "API_URL = ${API_URL}"
+            echo "${API_URL}"
             echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
             cat frontend/.env
       - run:
@@ -208,9 +208,11 @@ jobs:
     docker:
       # Docker image here that supports Ansible
     steps:
-      # Checkout code from git
-      # Add ssh keys with fingerprint
-      # attach workspace
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["fa:f8:21:27:fd:a4:05:3f:01:7e:72:57:54:81:02:18"]
+      - attach_workspace:
+          at: ~/
       - run:
           name: Install dependencies
           command: |
@@ -218,7 +220,16 @@ jobs:
       - run:
           name: Deploy backend
           command: |
-            # your code here
+            cd backend
+            npm i
+            npm run build
+            cd ..
+            tar -C backend -czvf artifact.tar.gz .
+            cd .circleci/ansible
+            echo "Contents  of the inventory.txt file is -------"
+            cat inventory.txt
+            ansible-playbook -i inventory.txt deploy-backend.yml
+
       # Here's where you will add some code to rollback on failure  
 
   smoke-test:
