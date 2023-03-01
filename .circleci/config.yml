@@ -172,35 +172,60 @@ jobs:
           paths:
             - project/.circleci/ansible/inventory.txt
 
+  # configure-infrastructure:
+  #   docker:
+  #     - image: python:3.7-alpine3.11
+  #   steps:
+  #     - checkout
+  #     - add_ssh_keys:
+  #         fingerprints: ["28:29:ec:14:1d:d8:81:ea:2b:1f:37:30:84:99:d3:e0"]
+  #     - run:
+  #         name: Install dependencies
+  #         command: |
+  #           apk add --update tar gzip ansible
+  #           pip install awscli
+  #     - attach_workspace:
+  #         at: ~/
+  #     - run: 
+  #         name: DEBUG
+  #         command: |
+  #           cd ~/project/.circleci/ansible
+  #           cat inventory.txt
+  #     - run:
+  #         name: Configure server
+  #         command: |
+  #           cd ~/project/.circleci/ansible
+  #           ansible-playbook -i inventory.txt configure-server.yml
+  #     # Here's where you will add some code to rollback on failure 
+  #     # - destroy-environment:
+  #     #     id: '${CIRCLE_WORKFLOW_ID:0:7}'
+
+
+
   configure-infrastructure:
     docker:
       - image: python:3.7-alpine3.11
     steps:
       - checkout
+      # Add ssh keys with fingerprint
       - add_ssh_keys:
-          fingerprints: ["28:29:ec:14:1d:d8:81:ea:2b:1f:37:30:84:99:d3:e0"]
+          fingerprints: ["a5:39:80:52:1a:ea:51:2e:80:b9:d8:40:c3:e9:65:c0"]
+      - attach_workspace:
+          at: ~/
       - run:
           name: Install dependencies
           command: |
-            apk add --update tar gzip ansible
-            pip install awscli
+            apk add curl
+            apk add --upgrade bash
+            apk add --update ansible
             apk add openssh-client
-      - attach_workspace:
-          at: ~/
-      - run: 
-          name: DEBUG
-          command: |
-            cd ~/project/.circleci/ansible
-            cat inventory.txt
+            pip3 install awscli
       - run:
           name: Configure server
           command: |
-            cd ~/project/.circleci/ansible
-            ansible-playbook -i inventory.txt configure-server.yml
-      # Here's where you will add some code to rollback on failure 
-      # - destroy-environment:
-      #     id: '${CIRCLE_WORKFLOW_ID:0:7}'
-
+            cat ~/project/.circleci/ansible/inventory.txt
+            export ANSIBLE_HOST_KEY_CHECKING=False
+            ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/configure-server.yml
   
   # run-migrations:
   #   docker:
