@@ -241,6 +241,9 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/
+      - restore_cache:
+          keys:
+            - frontend-build
       - run:
           name: Get backend url
           command: |
@@ -280,12 +283,14 @@ jobs:
           fingerprints: ["a5:39:80:52:1a:ea:51:2e:80:b9:d8:40:c3:e9:65:c0"]
       - attach_workspace:
           at: ~/
+      - restore_cache:
+          keys:
+            - backend-build
       - run:
           name: Install dependencies
           command: |
             apk add --update tar gzip ansible npm curl
             pip install awscli
-
       - run:
           name: Deploy backend
           command: |
