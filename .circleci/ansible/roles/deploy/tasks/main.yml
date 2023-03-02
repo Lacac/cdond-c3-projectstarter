@@ -8,12 +8,12 @@
 
 - name: unzip artifacr.tar.gz
   become: true
-  command: |
+  shell: |
     tar -xzvf artifact.tar.gz
 
 - name: Restart the app
   become: true
-  command: |
+  shell: |
     npm install
     pm2 stop default
     pm2 start npm -- start
