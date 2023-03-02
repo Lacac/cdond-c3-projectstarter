@@ -284,7 +284,9 @@ jobs:
           name: Install dependencies
           command: |
             apk add --update tar gzip ansible
+            pip install awscli
             apk add --no-cache npm
+            apk add --no-cache curl
       - run:
           name: Deploy backend
           command: |
@@ -296,7 +298,7 @@ jobs:
             echo "------------------ ls & pwd"
             pwd
             ls
-            echo"---------------------"
+            echo "---------------------"
             cd ~/project/.circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
