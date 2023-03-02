@@ -1,16 +1,16 @@
 
-- name: copy file to ec2
-  become: true
-  copy:
-    src: ~/project/artifact.tar.gz
-    dest: /home/ubuntu
-    backup: yes
+# - name: copy file to ec2
+#   become: true
+#   copy:
+#     src: ~/project/artifact.tar.gz
+#     dest: /home/ubuntu
+#     backup: yes
 
-- name: unzip artifacr.tar.gz
-  become: true
-  shell: |
-    cd /home/ubuntu
-    tar -xzvf artifact.tar.gz
+# - name: unzip artifacr.tar.gz
+#   become: true
+#   shell: |
+#     cd /home/ubuntu
+#     tar -xzvf artifact.tar.gz
 
 # - name: Restart the app
 #   become: true
@@ -20,18 +20,18 @@
 #     pm2 stop default
 #     pm2 start npm -- start
 
-# - name: create directory 
-#   become: true
-#   file: 
-#     path: /home/ubuntu/web
-#     state: directory
-#     mode: 0755
+- name: create directory 
+  become: true
+  file: 
+    path: /home/ubuntu/web
+    state: directory
+    mode: 0755
 
-# - name: copy artifact
-#   become: true
-#   copy: 
-#     src: ~/project/artifact.tar.gz
-#     dest: /home/ubuntu/web/artifact.tar.gz
+- name: copy artifact
+  become: true
+  copy: 
+    src: ~/project/artifact.tar.gz
+    dest: /home/ubuntu/web/artifact.tar.gz
 
 # - name: Extract artifact files
 #   become: true
