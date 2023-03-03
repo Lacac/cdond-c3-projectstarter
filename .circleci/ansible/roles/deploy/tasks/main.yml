@@ -10,10 +10,10 @@
   become: true
   shell: |
     cd /home/ubuntu
-    tar -xzvf artifact.tar.gz -C
-
+    tar -xzvf artifact.tar.gz
 
 # rm artifact.tar.gz
+
 # - name: Restart the app
 #   become: true
 #   shell: |
