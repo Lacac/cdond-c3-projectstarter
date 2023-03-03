@@ -267,17 +267,6 @@ jobs:
           root: ~/
           paths:
             - project/frontend/.env
-      # - run: 
-      #     name: DEBUG
-      #     command: |
-      #       pwd
-      #       ls
-      #       echo "frontend----------------------"
-      #       cd ~/project/frontend
-      #       ls
-      #       echo "backend-----------------------"
-      #       cd ~/project/backend
-      #       ls
       - destroy-environment
       - revert-migrations
 
