@@ -253,8 +253,6 @@ jobs:
             echo "${API_URL}"
             echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
             echo "---------------------------- ENV of frontend"
-            cd frontend
-            ls -la
             cat frontend/.env
       - run:
           name: Deploy frontend objects
@@ -332,6 +330,7 @@ jobs:
           command: |
             cd frontend
             ls -la
+            cd ..
             cat frontend/.env
 
       # - run:
