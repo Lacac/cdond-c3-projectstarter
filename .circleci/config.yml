@@ -327,14 +327,16 @@ jobs:
             apk add --update tar gzip ansible npm curl
             apk add --no-cache grep
             pip install awscli
-      - run:
-          name: Get backend url
-          command: |
-            export API_URL=$(grep -Po '(?<=API_URL=)[^,]+' ~/project/frontend/.env)
-            echo "${API_URL}"
+      # - run:
+      #     name: Get backend url
+      #     command: |
+      #       export API_URL=$(grep -Po '(?<=API_URL=)[^,]+' ~/project/frontend/.env)
+      #       echo "${API_URL}"
       - run:
           name: Backend smoke test.
           command: |
+            export API_URL=$(grep -Po '(?<=API_URL=)[^,]+' ~/project/frontend/.env)
+            echo "${API_URL}"
             if curl "${API_URL}/api/status" | grep "ok" 
             then 
               return 0
