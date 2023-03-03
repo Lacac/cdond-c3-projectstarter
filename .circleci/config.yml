@@ -329,13 +329,11 @@ jobs:
       - run:
           name: Get backend url
           command: |
-            cd frontend
-            ls -la
+            export API_URL=$(grep -Po '(?<=API_URL=)[^,]+' ~/project/frontend/.env)
             echo "${API_URL}"
       - run:
           name: Backend smoke test.
           command: |
-            cd frontend
             if curl "${API_URL}/api/status" | grep "ok" 
             then 
               return 0
