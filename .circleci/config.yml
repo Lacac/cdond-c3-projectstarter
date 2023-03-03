@@ -257,6 +257,7 @@ jobs:
       - run:
           name: Deploy frontend objects
           command: |
+            echo "--------------${API_URL}"
             cd frontend
             npm install
             npm run build
@@ -330,7 +331,7 @@ jobs:
           command: |
             cd frontend
             ls -la
-            echo "--------- ${API_URL}"
+            echo "${API_URL}"
       - run:
           name: Backend smoke test.
           command: |
