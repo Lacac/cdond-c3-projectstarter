@@ -365,7 +365,7 @@ jobs:
 
   cleanup:
     docker:
-      - images: doctrine/nodejs-aws-cli:latest
+      - image: doctrine/nodejs-aws-cli:latest
     steps:
       - checkout
       - run:
